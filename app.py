@@ -214,11 +214,8 @@ if st.button("🚀 Generate Podcast Audio"):
                         type="primary",
                     )
 
-                # Optional: If your podcast_agent also outputs the script, you can add this
-                # For now, assuming it only outputs audio. If script is available, adjust accordingly.
-                # with st.expander("📄 View Generated Script"):
-                #     st.write(podcast_script)
 
             except Exception as e:
                 status.update(label="❌ Pipeline failed", state="error")
                 st.error(f"Error: {str(e)}")
+
