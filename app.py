@@ -190,7 +190,9 @@ if st.button("🚀 Generate Podcast Audio"):
                 )
                 request = run_local_application(podcast_agent, input_data)
                 audio_file = request.output()
-                audio_bytes = audio_file.content
+                # 🔧 FIX: convert bytearray → bytes for Streamlit
+                audio_bytes = bytes(audio_file.content)
+                st.audio(audio_bytes, format="audio/mp3")
 
                 status.update(
                     label="✅ Podcast generated successfully!",
@@ -218,4 +220,3 @@ if st.button("🚀 Generate Podcast Audio"):
             except Exception as e:
                 status.update(label="❌ Pipeline failed", state="error")
                 st.error(f"Error: {str(e)}")
-
