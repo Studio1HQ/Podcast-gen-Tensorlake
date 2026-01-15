@@ -418,9 +418,9 @@ def extract_clean_text(crawl_result: dict) -> str:
     return "\n\n".join(text_blocks)
 
 @function(secrets=["GEMINI_API_KEY"])
-def summarize_with_gemini(clean_text: str) -> File:
+def summarize_with_gemini(clean_text: str) -> str:
     """
-    Generate a podcast-style summary and store it as a file.
+    Generate a podcast-style summary.
     """
     from google import genai
     import os
@@ -440,25 +440,18 @@ def summarize_with_gemini(clean_text: str) -> File:
         contents=prompt
     )
 
-    summary_text = response.text.encode("utf-8")
-
-    return File(
-        content=summary_text,
-        content_type="text/plain; charset=utf-8"
-    )
+    return response.text
 
 
 @function(secrets=["ELEVENLABS_API_KEY"])
-def generate_audio(script_file: File) -> File:
+def generate_audio(script_text: str) -> File:
     """
-    Convert podcast script file into audio using ElevenLabs TTS.
+    Convert podcast script text into audio using ElevenLabs TTS.
     """
     import os
     import requests
 
     VOICE_ID = "21m00Tcm4TlvDq8ikWAM"
-
-    script_text = script_file.content.decode("utf-8")
 
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}"
 
@@ -489,6 +482,7 @@ def generate_audio(script_file: File) -> File:
         content_type="audio/mpeg",
     )
 
+
 # Local testing
 if __name__ == "__main__":
     from tensorlake.applications import run_local_application
@@ -509,5 +503,6 @@ if __name__ == "__main__":
         f.write(audio_file.content)
 
     print("Saved podcast_audio.mp3")
+
 
 
